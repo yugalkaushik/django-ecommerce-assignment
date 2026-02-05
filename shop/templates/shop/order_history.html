@@ -1,0 +1,45 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Order History - ShopSmart{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Your Orders</h2>
+
+{% if orders %}
+<div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 16px rgba(30, 58, 143, 0.08);">
+    {% for order in orders %}
+    <div style="border: 2px solid #dbeafe; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; transition: all 0.3s ease;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+                <h3 style="color: #1e3a8a; font-weight: 600;">Order #{{ order.id }}</h3>
+                <p style="color: #64748b; font-size: 1rem;">{{ order.created_at|date:"F d, Y" }}</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 1.5rem; font-weight: 700; color: #2563eb;">₹{{ order.total_amount }}</p>
+                <p><span style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); color: #1e40af; border-radius: 8px; font-size: 0.95rem; font-weight: 600;">{{ order.get_status_display }}</span></p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+            <strong style="color: #1e3a8a;">Items:</strong>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem; color: #1e3a8a;">
+                {% for item in order.items.all %}
+                <li style="margin: 0.5rem 0;">{{ item.product.name }} - Qty: {{ item.quantity }} - ₹{{ item.get_subtotal }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+            <a href="{% url 'order_detail' order.id %}" class="btn">View Details</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>No orders yet</h3>
+    <p>Start shopping to place your first order</p>
+    <a href="{% url 'product_list' %}" class="btn" style="margin-top: 1rem;">Browse Products</a>
+</div>
+{% endif %}
+{% endblock %}

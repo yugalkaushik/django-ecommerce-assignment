@@ -1,0 +1,38 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Checkout - ShopSmart{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Checkout</h2>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 16px rgba(30, 58, 143, 0.08);">
+        <h3 style="margin-bottom: 1.5rem; color: #1e3a8a; font-weight: 600;">Shipping Information</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #1e3a8a;">Shipping Address:</label>
+                <textarea name="shipping_address" rows="4" required style="width: 100%; padding: 1rem; border: 2px solid #bfdbfe; border-radius: 12px; font-family: inherit; font-size: 1rem; transition: all 0.3s ease;"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-success" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                Place Order
+            </button>
+        </form>
+    </div>
+    
+    <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 4px 16px rgba(30, 58, 143, 0.08);">
+        <h3 style="margin-bottom: 1.5rem; color: #1e3a8a; font-weight: 600;">Order Summary</h3>
+        {% for item in cart_items %}
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #eff6ff; color: #1e3a8a;">
+            <span>{{ item.product.name }} x{{ item.quantity }}</span>
+            <span style="font-weight: 600;">₹{{ item.get_subtotal }}</span>
+        </div>
+        {% endfor %}
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #3b82f6; font-size: 1.5rem; font-weight: 700;">
+            <span style="color: #1e3a8a;">Total:</span>
+            <span style="color: #2563eb;">₹{{ cart.get_total }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

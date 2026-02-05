@@ -1,0 +1,68 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}{{ product.name }} - ShopSmart{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0;">
+    <div>
+        <div class="product-image" style="width: 100%; height: 350px; font-size: 7rem; border-radius: 10px; border: 1px solid #e2e8f0;">{{ product.name|slice:":1"|upper }}</div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+        <h1 style="margin-bottom: 0.75rem; color: #0f172a; font-weight: 700; font-size: 1.875rem; letter-spacing: -0.02em;">{{ product.name }}</h1>
+        <p style="color: #64748b; margin-bottom: 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">{{ product.category.name }}</p>
+        <p class="price" style="font-size: 2rem; margin: 0.75rem 0;">₹{{ product.price }}</p>
+        <p style="margin: 1.25rem 0; color: #475569; line-height: 1.6; font-size: 0.95rem;">{{ product.description }}</p>
+        <p style="font-size: 0.9rem; margin: 1.25rem 0; color: #64748b; padding: 0.875rem; background: #f8fafc; border-radius: 6px; border-left: 3px solid #3b82f6;">
+            <strong style="color: #0f172a;">Available Stock:</strong> {{ product.stock }} units
+        </p>
+        
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+            {% if user.is_authenticated %}
+                {% if product.stock > 0 %}
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success" style="flex: 1; text-align: center; padding: 0.875rem 1.5rem; font-size: 0.95rem;">
+                    Add to Cart
+                </a>
+                {% else %}
+                <button class="btn btn-secondary" disabled style="flex: 1; padding: 0.875rem 1.5rem; font-size: 0.95rem; opacity: 0.6;">Out of Stock</button>
+                {% endif %}
+                
+                <form method="post" action="{% url 'like_product' product.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="padding: 1.25rem 1.75rem;">Like</button>
+                </form>
+                
+                <form method="post" action="{% url 'dislike_product' product.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary" style="padding: 1.25rem 1.75rem;">Dislike</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn" style="flex: 1; text-align: center; padding: 1.25rem 2rem; font-size: 1.05rem;">
+                    Login to Purchase
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if similar_products %}
+<section style="margin-top: 4rem;">
+    <h2 class="section-title">You Might Also Like</h2>
+    <p class="section-subtitle">Similar products based on your selection</p>
+    <div class="product-grid">
+        {% for similar in similar_products %}
+        <div class="product-card">
+            <div class="product-image">{{ similar.name|slice:":1"|upper }}</div>
+            <div class="product-card-content">
+                <h3>{{ similar.name }}</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ similar.category.name }}</p>
+                <p class="price">₹{{ similar.price }}</p>
+                <p style="font-size: 0.9rem; margin-bottom: 1.25rem; color: #94a3b8;">In stock: {{ similar.stock }}</p>
+                <a href="{% url 'product_detail' similar.id %}" class="btn" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

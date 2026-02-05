@@ -1,0 +1,58 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Home - ShopSmart{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Optimize, Outperform</h2>
+    <p>Discover amazing products with AI-powered recommendations tailored just for you</p>
+    <a href="{% url 'product_list' %}" class="btn" style="background: white; color: #0f172a; font-size: 1.05rem; padding: 1rem 2.5rem;">Explore Products</a>
+</div>
+
+{% if user.is_authenticated and recommended_products %}
+<section>
+    <h2 class="section-title">Recommended For You</h2>
+    <p class="section-subtitle">Curated selections based on your preferences and browsing history</p>
+    <div class="product-grid">
+        {% for product in recommended_products %}
+        <div class="product-card">
+            <div class="product-image">{{ product.name|slice:":1"|upper }}</div>
+            <div class="product-card-content">
+                <h3>{{ product.name }}</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ product.category.name }}</p>
+                <p class="price">₹{{ product.price }}</p>
+                <p style="font-size: 0.9rem; margin-bottom: 1.25rem; color: #94a3b8;">In stock: {{ product.stock }}</p>
+                <a href="{% url 'product_detail' product.id %}" class="btn" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section>
+    <h2 class="section-title">Featured Products</h2>
+    <p class="section-subtitle">Handpicked selections from our latest collection</p>
+    {% if featured_products %}
+    <div class="product-grid">
+        {% for product in featured_products %}
+        <div class="product-card">
+            <div class="product-image">{{ product.name|slice:":1"|upper }}</div>
+            <div class="product-card-content">
+                <h3>{{ product.name }}</h3>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ product.category.name }}</p>
+                <p class="price">₹{{ product.price }}</p>
+                <p style="font-size: 0.9rem; margin-bottom: 1.25rem; color: #94a3b8;">In stock: {{ product.stock }}</p>
+                <a href="{% url 'product_detail' product.id %}" class="btn" style="width: 100%; text-align: center;">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>No products available yet</h3>
+        <p>Check back soon for new arrivals</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

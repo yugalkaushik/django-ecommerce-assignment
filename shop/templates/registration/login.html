@@ -1,0 +1,37 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Login - ShopSmart{% endblock %}
+
+{% block content %}
+<div style="max-width: 480px; margin: 0 auto;">
+    <div style="background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+        <h2 style="margin-bottom: 2rem; text-align: center; color: #0f172a; font-weight: 700; font-size: 2rem; letter-spacing: -0.02em;">Welcome Back</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div style="background: #fef2f2; color: #991b1b; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 3px solid #ef4444;">
+                <p>Invalid username or password. Please try again.</p>
+            </div>
+            {% endif %}
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #0f172a; font-size: 0.95rem;">Username</label>
+                <input type="text" name="username" required style="width: 100%; padding: 1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.2s ease;">
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #0f172a; font-size: 0.95rem;">Password</label>
+                <input type="password" name="password" required style="width: 100%; padding: 1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; transition: all 0.2s ease;">
+            </div>
+            
+            <button type="submit" class="btn btn-success" style="width: 100%; font-size: 1.05rem; padding: 1.25rem;">Sign In</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 2rem; color: #64748b; font-size: 0.95rem;">
+            Don't have an account? <a href="{% url 'register' %}" style="color: #3b82f6; font-weight: 600; text-decoration: none;">Create one</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
